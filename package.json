@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "@duckdb/duckdb-wasm": "^1.32.0",
+    "maplibre-gl": "^5.22.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.10",
+    "@types/emscripten": "^1.40.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3"
+  },
+  "name": "terrabit",
+  "scripts": {
+    "build": "vite build",
+    "check": "biome check src/",
+    "dev": "vite",
+    "format": "biome check --write src/",
+    "lint": "biome lint src/",
+    "preview": "vite preview"
+  },
+  "type": "module",
+  "version": "0.0.1"
+}
