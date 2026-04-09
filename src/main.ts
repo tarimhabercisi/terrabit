@@ -1980,6 +1980,15 @@ let adsbLayer: AdsbLayer;
 
 function initAdsb(): void {
   globe.map.once("idle", () => {
+    // Create ADSB toggle button as fixed overlay on map
+    if (!document.getElementById("adsb-toggle")) {
+      const btn = document.createElement("button");
+      btn.id = "adsb-toggle";
+      btn.className = "adsb-toggle-btn";
+      btn.title = "Toggle live ADS-B air traffic (adsb.lol)";
+      btn.innerHTML = '<span class="adsb-icon">✈</span><span class="adsb-label">LIVE</span><span id="adsb-count" class="adsb-count"></span>';
+      document.body.appendChild(btn);
+    }
     adsbLayer = new AdsbLayer(globe.map, (count) => {
       const btn = document.getElementById("adsb-toggle");
       if (!btn) return;
