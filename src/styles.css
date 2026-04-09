@@ -2285,3 +2285,13 @@ button {
 .maplibregl-canvas {
   /* no changes needed, animations handled by data updates */
 }
+
+
+/* ADSB button fixed positioning override (body-appended) */
+.adsb-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 16px;
+  z-index: 1000;
+  margin-left: 0;
+}
