@@ -1979,7 +1979,7 @@ function bootstrap(): void {
 let adsbLayer: AdsbLayer;
 
 function initAdsb(): void {
-  globe.map.once("idle", () => {
+  const doInit = () => {
     // Create ADSB toggle button as fixed overlay on map
     if (!document.getElementById("adsb-toggle")) {
       const btn = document.createElement("button");
@@ -2001,7 +2001,8 @@ function initAdsb(): void {
     document.getElementById("adsb-toggle")?.addEventListener("click", () => {
       adsbLayer.setEnabled(!adsbLayer.isEnabled());
     });
-  });
+    };
+  if (globe.map.loaded()) { doInit(); } else { globe.map.once("idle", doInit); globe.map.once("load", doInit); }
 }
 
 bootstrap();
