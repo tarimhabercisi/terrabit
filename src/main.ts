@@ -1980,7 +1980,7 @@ let adsbLayer: AdsbLayer;
 
 function initAdsb(): void {
   const doInit = () => {
-    // Create ADSB toggle button as fixed overlay on map
+    // Ensure button exists (may have been created in renderShell)
     if (!document.getElementById("adsb-toggle")) {
       const btn = document.createElement("button");
       btn.id = "adsb-toggle";
@@ -2001,8 +2001,13 @@ function initAdsb(): void {
     document.getElementById("adsb-toggle")?.addEventListener("click", () => {
       adsbLayer.setEnabled(!adsbLayer.isEnabled());
     });
-    };
-  window.setTimeout(doInit, 1500);
+  };
+  // Use map load event for reliable timing
+  if (globe.map.isStyleLoaded()) {
+    doInit();
+  } else {
+    globe.map.once("load", doInit);
+  }
 }
 
 bootstrap();
