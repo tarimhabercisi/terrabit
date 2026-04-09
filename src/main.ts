@@ -1,3 +1,4 @@
+import { AdsbLayer } from "./adsb";
 import "./styles.css";
 import {
   buildManifestQuery,
@@ -1923,6 +1924,18 @@ function wire(): void {
 
 function bootstrap(): void {
   renderShell();
+  // Inject ADSB toggle button into header
+  {
+    const header = document.querySelector(".app-header");
+    if (header) {
+      const adsbBtn = document.createElement("button");
+      adsbBtn.id = "adsb-toggle";
+      adsbBtn.className = "adsb-toggle-btn";
+      adsbBtn.title = "Toggle live ADS-B air traffic (adsb.lol)";
+      adsbBtn.innerHTML = '<span class="adsb-icon">✈</span><span class="adsb-label">LIVE</span><span id="adsb-count" class="adsb-count"></span>';
+      header.appendChild(adsbBtn);
+    }
+  }
   const mapEl = document.querySelector<HTMLDivElement>("#map");
   if (!mapEl) throw new Error("#map missing");
   globe = new GlobeMap(mapEl, {
@@ -1959,6 +1972,26 @@ function bootstrap(): void {
       globe.setPositives(state.positivePoints);
     },
     globe,
+  });
+  initAdsb();
+}
+// ── ADS-B layer init (called from bootstrap after globe is ready) ──────────
+let adsbLayer: AdsbLayer;
+
+function initAdsb(): void {
+  globe.map.once("idle", () => {
+    adsbLayer = new AdsbLayer(globe.map, (count) => {
+      const btn = document.getElementById("adsb-toggle");
+      if (!btn) return;
+      btn.classList.toggle("is-on", adsbLayer.isEnabled());
+      const counter = document.getElementById("adsb-count");
+      if (counter) counter.textContent = count > 0 ? String(count) : "";
+    });
+    adsbLayer.addToMap();
+    // Wire toggle button
+    document.getElementById("adsb-toggle")?.addEventListener("click", () => {
+      adsbLayer.setEnabled(!adsbLayer.isEnabled());
+    });
   });
 }
 
