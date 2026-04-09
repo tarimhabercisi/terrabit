@@ -2002,7 +2002,7 @@ function initAdsb(): void {
       adsbLayer.setEnabled(!adsbLayer.isEnabled());
     });
     };
-  if (globe.map.loaded()) { doInit(); } else { globe.map.once("idle", doInit); globe.map.once("load", doInit); }
+  window.setTimeout(doInit, 1500);
 }
 
 bootstrap();
