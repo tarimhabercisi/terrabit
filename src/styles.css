@@ -2228,3 +2228,60 @@ button {
     transform: translate(-50%, -50%) scale(0.3);
   }
 }
+
+
+/* ─── ADS-B live traffic layer ──────────────────────────────────────── */
+.adsb-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid rgba(0, 212, 255, 0.35);
+  background: rgba(0, 212, 255, 0.06);
+  color: rgba(0, 212, 255, 0.65);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  white-space: nowrap;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.adsb-toggle-btn:hover {
+  background: rgba(0, 212, 255, 0.14);
+  border-color: rgba(0, 212, 255, 0.6);
+  color: rgba(0, 212, 255, 0.95);
+}
+.adsb-toggle-btn.is-on {
+  background: rgba(0, 212, 255, 0.18);
+  border-color: rgba(0, 212, 255, 0.8);
+  color: #00d4ff;
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.25);
+}
+.adsb-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+.adsb-label {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.adsb-count {
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: right;
+}
+.adsb-toggle-btn.is-on .adsb-label {
+  animation: adsb-blink 2s ease-in-out infinite;
+}
+@keyframes adsb-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+/* Pulse animation on the adsb-halo for active aircraft */
+.maplibregl-canvas {
+  /* no changes needed, animations handled by data updates */
+}
