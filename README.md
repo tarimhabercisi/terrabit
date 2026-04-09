@@ -2,7 +2,7 @@
 
 Binary earth embedding retrieval — find every satellite patch on Earth that looks like a location you point at.
 
-[**Live demo**](https://isaaccorley.github.io/terrabit)
+[**Live demo**](https://isaac.earth/terrabit)
 
 ## What it does
 

@@ -74,8 +74,8 @@ export class GlobeMap {
       minZoom: 0.5,
       maxZoom: 14,
       attributionControl: false,
-      dragRotate: false,
-      pitchWithRotate: false,
+      dragRotate: true,
+      pitchWithRotate: true,
       touchZoomRotate: true,
       renderWorldCopies: false,
     });
@@ -86,8 +86,8 @@ export class GlobeMap {
 
     this.map.addControl(
       new maplibregl.NavigationControl({
-        showCompass: false,
-        visualizePitch: false,
+        showCompass: true,
+        visualizePitch: true,
       }),
       "top-right",
     );

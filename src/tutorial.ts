@@ -75,6 +75,7 @@ function tutSimDelay(ms: number): Promise<void> {
 function tutCancelSim(): void {
   _tutSimHandles.forEach(clearTimeout);
   _tutSimHandles = [];
+  _cb?.globe.setDraft(null);
 }
 
 async function tutSimulateDraw(bbox: BBox, durationMs = 1400): Promise<void> {
