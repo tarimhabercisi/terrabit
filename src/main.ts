@@ -1924,19 +1924,7 @@ function wire(): void {
 
 function bootstrap(): void {
   renderShell();
-  // Inject ADSB toggle button into header
-  {
-    const header = document.querySelector(".app-header");
-    if (header) {
-      const adsbBtn = document.createElement("button");
-      adsbBtn.id = "adsb-toggle";
-      adsbBtn.className = "adsb-toggle-btn";
-      adsbBtn.title = "Toggle live ADS-B air traffic (adsb.lol)";
-      adsbBtn.innerHTML = '<span class="adsb-icon">✈</span><span class="adsb-label">LIVE</span><span id="adsb-count" class="adsb-count"></span>';
-      header.appendChild(adsbBtn);
-    }
-  }
-  const mapEl = document.querySelector<HTMLDivElement>("#map");
+    const mapEl = document.querySelector<HTMLDivElement>("#map");
   if (!mapEl) throw new Error("#map missing");
   globe = new GlobeMap(mapEl, {
     onDrawComplete: ({ bbox, polygon }) => {
@@ -1979,35 +1967,41 @@ function bootstrap(): void {
 let adsbLayer: AdsbLayer;
 
 function initAdsb(): void {
-  const doInit = () => {
-    // Ensure button exists (may have been created in renderShell)
-    if (!document.getElementById("adsb-toggle")) {
-      const btn = document.createElement("button");
-      btn.id = "adsb-toggle";
-      btn.className = "adsb-toggle-btn";
-      btn.title = "Toggle live ADS-B air traffic (adsb.lol)";
-      btn.innerHTML = '<span class="adsb-icon">✈</span><span class="adsb-label">LIVE</span><span id="adsb-count" class="adsb-count"></span>';
-      document.body.appendChild(btn);
-    }
+  // Create button immediately (no map required)
+  const btn = document.createElement("button");
+  btn.id = "adsb-toggle";
+  btn.className = "adsb-toggle-btn";
+  btn.title = "Toggle live ADS-B air traffic (adsb.lol)";
+  btn.innerHTML = '<span class="adsb-icon">✈</span><span class="adsb-label">LIVE</span><span id="adsb-count" class="adsb-count"></span>';
+  document.body.appendChild(btn);
+
+  let initialized = false;
+
+  function ensureInit(): boolean {
+    if (initialized) return true;
+    if (!globe.map.isStyleLoaded()) return false;
     adsbLayer = new AdsbLayer(globe.map, (count) => {
-      const btn = document.getElementById("adsb-toggle");
-      if (!btn) return;
       btn.classList.toggle("is-on", adsbLayer.isEnabled());
       const counter = document.getElementById("adsb-count");
       if (counter) counter.textContent = count > 0 ? String(count) : "";
     });
     adsbLayer.addToMap();
-    // Wire toggle button
-    document.getElementById("adsb-toggle")?.addEventListener("click", () => {
-      adsbLayer.setEnabled(!adsbLayer.isEnabled());
-    });
-  };
-  // Use map load event for reliable timing
-  if (globe.map.isStyleLoaded()) {
-    doInit();
-  } else {
-    globe.map.once("load", doInit);
+    initialized = true;
+    return true;
   }
+
+  btn.addEventListener("click", () => {
+    if (!ensureInit()) {
+      // Map not ready yet — try again after it loads
+      globe.map.once("load", () => {
+        ensureInit();
+        adsbLayer.setEnabled(true);
+        btn.classList.add("is-on");
+      });
+      return;
+    }
+    adsbLayer.setEnabled(!adsbLayer.isEnabled());
+  });
 }
 
 bootstrap();
